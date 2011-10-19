@@ -22,20 +22,23 @@
  */
 class EBlueprintWidget extends CWidget
 {
-	// Url to vendors css-files.
-	private static $baseUrl;
+	public $plugins=array();
 
-	public function setBaseUrl($url)
-	{
-		self::$baseUrl=$url;
-	}
-	public function getBaseUrl()
-	{
-		return self::$baseUrl;
-	}
+	// Url to vendors css-files.
+	private $_baseUrl;
+	private $_basePUrl;
+	private $_debug;
+
+	private $_installedPlagins = array(
+		'buttons','fancy-type','link-icons','rtl','sprites',
+	);
+
 	public function init()
 	{
-		foreach(self::getCssFiles(YII_DEBUG) as $file)
+		if($this->_debug===null)
+			$this->_debug = YII_DEBUG;
+
+		foreach($this->getCssFiles($this->_debug) as $file)
 		{
 			if(isset($file[2]))
 				echo '<!--[if lt IE '.$file[2].']>'."\n";
@@ -43,30 +46,47 @@ class EBlueprintWidget extends CWidget
 			if(isset($file[2]))
 				echo '<![endif]-->'."\n";
 		}
+
+		foreach($this->plugins as $plugin)
+		{
+			if($this->isPlaginInstalled($plugin))
+				echo CHtml::cssFile($this->_basePUrl.'/'.$plugin.'/screen.css','screen,projection')."\n";
+		}
 	}
-	public static function getCssFiles($debug=false)
+	public function getCssFiles($debug=false)
 	{
-		if(self::$baseUrl===null)
-			self::$baseUrl=Yii::app()->getAssetManager()->publish(dirname(__FILE__).'/vendors/joshuaclayton-blueprint-css-5d113e9/blueprint');
+		if($this->_baseUrl===null)
+			$this->_baseUrl=Yii::app()->getAssetManager()->publish(dirname(__FILE__).'/vendors/joshuaclayton-blueprint-css/blueprint');
 
 		if($debug)
 		{
 			return array(
-				array(self::$baseUrl.'/src/reset.css','screen,projection'),
-				array(self::$baseUrl.'/src/typography.css','screen,projection'),
-				array(self::$baseUrl.'/src/grid.css','screen,projection'),
-				array(self::$baseUrl.'/src/forms.css','screen,projection'),
-				array(self::$baseUrl.'/src/print.css','print'),
-				array(self::$baseUrl.'/src/ie.css','screen,projection','8'),
+				array($this->_baseUrl.'/src/reset.css','screen,projection'),
+				array($this->_baseUrl.'/src/typography.css','screen,projection'),
+				array($this->_baseUrl.'/src/grid.css','screen,projection'),
+				array($this->_baseUrl.'/src/forms.css','screen,projection'),
+				array($this->_baseUrl.'/src/print.css','print'),
+				array($this->_baseUrl.'/src/ie.css','screen,projection','8'),
 			);
 		}
 		else
 		{
 			return array(
-				array(self::$baseUrl.'/screen.css','screen,projection'),
-				array(self::$baseUrl.'/print.css','print'),
-				array(self::$baseUrl.'/ie.css','screen,projection','8'),
+				array($this->_baseUrl.'/screen.css','screen,projection'),
+				array($this->_baseUrl.'/print.css','print'),
+				array($this->_baseUrl.'/ie.css','screen,projection','8'),
 			);
 		}
+	}
+
+	public function isPlaginInstalled($plugin)
+	{
+		if($this->_basePUrl===null)
+			$this->_basePUrl=Yii::app()->getAssetManager()->publish(dirname(__FILE__).'/vendors/joshuaclayton-blueprint-css/plugins');
+
+		if(in_array($plugin, $this->_installedPlagins))
+			return true;
+
+		return false;
 	}
 }

@@ -5,5 +5,7 @@ EBlueprintWidget widget
 Вставьте виджет сразу после head-тега:
 ~~~
 [php]
-$this->widget('ext.yiiext.widgets.blueprint.EBlueprintWidget');
+$this->widget('ext.yiiext.widgets.blueprint.EBlueprintWidget', array(
+	'plugins' => array('buttons','fancy-type','link-icons','rtl','sprites',),
+));
 ~~~

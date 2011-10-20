@@ -1,3 +1,7 @@
+0.3
+---
+[*] Update blueptint framework (Slava Rudnev)
+[*] Add plugins (Slava Rudnev)
 0.2
 ---
 [*] Rename scriptUrl property to baseUrl (Veaceslav Medvedev)

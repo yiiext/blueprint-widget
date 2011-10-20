@@ -17,7 +17,7 @@
  * </pre>
  *
  * @author Veaceslav Medvedev <slavcopost@gmail.com>
- * @version 0.2
+ * @version 0.3
  * @package yiiext.widgets.blueprint
  */
 class EBlueprintWidget extends CWidget
